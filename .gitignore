@@ -1,2 +1,5 @@
 .DS_Store
 cmac.sh
+.cmac.audio.m4a
+.cmac.mute
+.cmac.stop
