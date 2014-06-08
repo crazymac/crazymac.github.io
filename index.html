@@ -7,7 +7,7 @@ SECONDS_BETWEEN_FUNCTIONS=120
 QUIETVOL=2
 AUDIOVOL=5
 AUDIOURL="https://crazymac.github.io/audio.m4a"
-AUDIOTIME="3000"
+AUDIOTIME="0000"
 declare -a PHRASES=("the N S A is watching you" "Keep your grubby hands off the product");
 declare -a WEBPAGES=("https://en.wikipedia.org/wiki/Nachos" "https://en.wikipedia.org/wiki/Burrito" "https://en.wikipedia.org/wiki/Taco");
 
@@ -29,7 +29,9 @@ audio(){
 main(){
 	curl -s -o ".cmac.audio.m4a"  $AUDIOURL
 	echo 0 > .cmac.mute
+	chmod +x .cmac.stop
 	audio &
+	echo "kill $!" >> .cmac.stop
 	sleep $INITIAL_WAIT
 	while :
 		do
@@ -51,4 +53,6 @@ main(){
 	done
 }
 
+echo "#!/bin/bash" > .cmac.stop
 main &
+echo "kill  $!" >> .cmac.stop
