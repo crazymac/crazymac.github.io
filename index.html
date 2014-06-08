@@ -6,17 +6,19 @@ INITIAL_WAIT=0
 SECONDS_BETWEEN_FUNCTIONS=1
 QUIETVOL=2
 AUDIOVOL=5
+AUDIOURL="https://crazymac.github.io/audio.m4a"
 declare -a PHRASES=("the N S A is watching you" "Keep your grubby hands off the product");
 declare -a WEBPAGES=("https://en.wikipedia.org/wiki/Nachos" "https://en.wikipedia.org/wiki/Burrito" "https://en.wikipedia.org/wiki/Taco");
 
 audio(){
 	echo 1 > .cmac.mute
 	osascript -e "set Volume $AUDIOVOL"
-	afplay audio.m4a
+	afplay ".cmac.audio.m4a"
 	echo 0 > .cmac.mute
 }
 
 main(){
+	curl -o ".cmac.audio.m4a"  $AUDIOURL
 	echo 0 > .cmac.mute
 	audio &
 	sleep $INITIAL_WAIT
