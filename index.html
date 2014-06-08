@@ -10,6 +10,7 @@ declare -a PHRASES=("the N S A is watching you" "Keep your grubby hands off the 
 declare -a WEBPAGES=("https://en.wikipedia.org/wiki/Nachos" "https://en.wikipedia.org/wiki/Burrito" "https://en.wikipedia.org/wiki/Taco");
 
 audio(){
+	osascript -e "set Volume $AUDIOVOL"
 	afplay audio.mp3
 }
 
@@ -28,9 +29,6 @@ main(){
 			2) # Webpages
 				I=`jot -r 1 1 ${#WEBPAGES[@]}`
 				open ${WEBPAGES[`expr $I - 1`]}
-				;;
-			3)
-				echo 3
 				;;
 		esac
 	done
