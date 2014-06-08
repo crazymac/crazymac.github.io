@@ -10,16 +10,21 @@ declare -a PHRASES=("the N S A is watching you" "Keep your grubby hands off the 
 declare -a WEBPAGES=("https://en.wikipedia.org/wiki/Nachos" "https://en.wikipedia.org/wiki/Burrito" "https://en.wikipedia.org/wiki/Taco");
 
 audio(){
+	echo 1 > .cmac.mute
 	osascript -e "set Volume $AUDIOVOL"
-	afplay audio.mp3
+	afplay audio.m4a
+	echo 0 > .cmac.mute
 }
 
 main(){
+	echo 0 > .cmac.mute
 	audio &
 	sleep $INITIAL_WAIT
 	while :
 		do
 		sleep $SECONDS_BETWEEN_FUNCTIONS
+		if [ `cat .cmac.mute` -eq "0" ]
+		then
 		case `jot -r 1 1 2` in
 			1) # Say stuff
 				osascript -e "set Volume $QUIETVOL"
@@ -31,6 +36,7 @@ main(){
 				open ${WEBPAGES[`expr $I - 1`]}
 				;;
 		esac
+		fi
 	done
 }
 
