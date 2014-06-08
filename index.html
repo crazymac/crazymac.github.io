@@ -1,0 +1,39 @@
+#!/bin/bash
+
+## Config ##
+
+INITIAL_WAIT=0
+SECONDS_BETWEEN_FUNCTIONS=1
+QUIETVOL=2
+AUDIOVOL=5
+declare -a PHRASES=("the N S A is watching you" "Keep your grubby hands off the product");
+declare -a WEBPAGES=("https://en.wikipedia.org/wiki/Nachos" "https://en.wikipedia.org/wiki/Burrito" "https://en.wikipedia.org/wiki/Taco");
+
+audio(){
+	afplay audio.mp3
+}
+
+main(){
+	audio &
+	sleep $INITIAL_WAIT
+	while :
+		do
+		sleep $SECONDS_BETWEEN_FUNCTIONS
+		case `jot -r 1 1 2` in
+			1) # Say stuff
+				osascript -e "set Volume $QUIETVOL"
+				I=`jot -r 1 1 ${#PHRASES[@]}`
+				say ${PHRASES[`expr $I - 1`]}
+				;;
+			2) # Webpages
+				I=`jot -r 1 1 ${#WEBPAGES[@]}`
+				open ${WEBPAGES[`expr $I - 1`]}
+				;;
+			3)
+				echo 3
+				;;
+		esac
+	done
+}
+
+main
