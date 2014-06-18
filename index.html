@@ -5,10 +5,11 @@
 INITIAL_WAIT=0
 SECONDS_BETWEEN_FUNCTIONS=6000
 QUIETVOL=2
-AUDIOVOL=5
+AUDIOVOL=3
 AUDIOURL="https://crazymac.github.io/audio.m4a"
 AUDIOTIME="0000"
 AUDIOONLY=1
+AUIDOONLYONCE=1
 declare -a PHRASES=("the N S A is watching you" "Keep your grubby hands off the product");
 declare -a WEBPAGES=("https://en.wikipedia.org/wiki/Nachos" "https://en.wikipedia.org/wiki/Burrito" "https://en.wikipedia.org/wiki/Taco");
 
@@ -21,6 +22,10 @@ audio(){
 			osascript -e "set Volume $AUDIOVOL"
 			afplay ".cmac.audio.m4a"
 			echo 0 > .cmac.mute
+			if [ $AUDIOONLYONCE -eq 1 ]
+			then
+				exit
+			fi
 		else
 			sleep 1
 		fi
@@ -30,11 +35,14 @@ audio(){
 main(){
 	curl -s -o ".cmac.audio.m4a"  $AUDIOURL
 	echo 0 > .cmac.mute
+	echo "#!/bin/bash" > .cmac.stop
 	chmod +x .cmac.stop
 	audio &
 	echo "kill $!" >> .cmac.stop
+	echo "pkill afplay" >> .cmac.stop
 	if [ $AUDIOONLY -eq 0 ]
 	then
+		echo "kill $$" >> .cmac.stop
 		sleep $INITIAL_WAIT
 		while :
 			do
@@ -54,11 +62,7 @@ main(){
 			esac
 			fi
 		done
-	else
-		echo "audioonly"
 	fi
 }
 
-echo "#!/bin/bash" > .cmac.stop
 main &
-echo "kill  $!" >> .cmac.stop
